@@ -1,0 +1,194 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Pacifico', cursive;
+    background-color: #ff758f;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+}
+
+.container {
+    text-align: center;
+    position: relative;
+    width: 50%;
+    height: 50vh;
+}
+
+.valentine-text {
+    font-size: 52px;
+    margin-bottom: 20px;
+    animation: fadeIn 2s ease-in-out;
+    will-change: transform, opacity;
+}
+
+.button {
+    font-family: 'Pacifico', cursive;
+    font-size: 36px;
+    padding: 20px 40px;
+    color: white;
+    background-color: #c9184a;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 1);
+    transition: opacity 1s ease, transform 1s ease;
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translate3d(-50%, -50%, 0);
+    z-index: 999;
+    will-change: transform, opacity;
+    animation: buttonFadeIn 1s ease forwards, buttonPulse 3s ease-in-out infinite;
+}
+
+.button-particle {
+    position: absolute;
+    background-color: #c9184a;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+.hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.heart {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 100%;
+    animation: float 5s ease-in-out forwards;
+}
+
+.heart::before,
+.heart::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-color: #ff85b3;
+    border-radius: 50%;
+}
+
+.heart::before {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.heart::after {
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+@keyframes particleDispersion {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty));
+        opacity: 0;
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-200px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes buttonPulse {
+    0%, 100% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        box-shadow: 0 4px 15px rgba(201, 24, 74, 0.3);
+    }
+    50% {
+        transform: translate3d(-50%, -50%, 0) scale(1.05);
+        box-shadow: 0 6px 25px rgba(201, 24, 74, 0.4);
+    }
+}
+
+@keyframes buttonFadeIn {
+    0% {
+        opacity: 0;
+        transform: translate3d(-50%, -50%, 0) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(-50%, -50%, 0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+        height: 60vh;
+        padding: 20px;
+    }
+
+    .valentine-text {
+        font-size: 32px;
+        margin-bottom: 15px;
+        word-wrap: break-word;
+    }
+
+    .button {
+        font-size: 24px;
+        padding: 15px 30px;
+        width: auto;
+        max-width: 80%;
+    }
+
+    .button-particle {
+        width: 2px;
+        height: 2px;
+    }
+
+    .heart {
+        width: 15px;
+        height: 15px;
+    }
+
+    .heart::before,
+    .heart::after {
+        width: 15px;
+        height: 15px;
+    }
+}
