@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
             confetti.push({
                 x: Math.random() * canvas.width,
                 y: -20,
-                size: Math.random() * (30 - 15) + 15, // Random size between 15 and 30
+                size: Math.random() * (30 - 15) + 15,
                 speedY: Math.random() * 2 + 1,
                 speedX: Math.random() * 1.5 - 0.75,
                 rotation: Math.random() * 360,
@@ -160,6 +160,52 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    function createParticles(buttonRect) {
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '1000';
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const particles = [];
+        const particleSize = 3;
+        const colors = ['#c9184a', '#ff758f', '#ff85b3'];
+        for (let i = 0; i < buttonRect.width; i += particleSize) {
+            for (let j = 0; j < buttonRect.height; j += particleSize) {
+                particles.push({
+                    x: buttonRect.left + i,
+                    y: buttonRect.top + j,
+                    size: particleSize,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    angle: Math.random() * Math.PI * 2,
+                    speed: 50 + Math.random() * 50,
+                    opacity: 1
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                ctx.fillStyle = particle.color;
+                ctx.globalAlpha = particle.opacity;
+                ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
+                particle.x += Math.cos(particle.angle) * particle.speed * 0.03;
+                particle.y += Math.sin(particle.angle) * particle.speed * 0.03;
+                particle.opacity -= 0.02;
+            });
+            if (particles.some(particle => particle.opacity > 0)) {
+                requestAnimationFrame(animateParticles);
+            } else {
+                canvas.remove();
+            }
+        }
+        animateParticles();
+    }
     button.addEventListener("click", () => {
         if (isButtonAnimating) return;
         isButtonAnimating = true;
@@ -168,40 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
         button.style.opacity = '0';
         button.style.pointerEvents = 'none';
         const buttonRect = button.getBoundingClientRect();
-        const particlesContainer = document.createElement('div');
-        particlesContainer.style.position = 'fixed';
-        particlesContainer.style.zIndex = '1000';
-        particlesContainer.style.left = '0';
-        particlesContainer.style.top = '0';
-        document.body.appendChild(particlesContainer);
-        const particles = [];
-        const particleSize = 3;
-        for (let i = 0; i < buttonRect.width; i += particleSize) {
-            for (let j = 0; j < buttonRect.height; j += particleSize) {
-                const particle = document.createElement('div');
-                particle.className = 'button-particle';
-                const x = buttonRect.left + i;
-                const y = buttonRect.top + j;
-                particle.style.left = `${x}px`;
-                particle.style.top = `${y}px`;
-                particle.style.width = `${particleSize}px`;
-                particle.style.height = `${particleSize}px`;
-                const angle = Math.random() * Math.PI * 2;
-                const speed = 50 + Math.random() * 50;
-                const tx = Math.cos(angle) * speed;
-                const ty = Math.sin(angle) * speed;
-                particle.style.setProperty('--tx', `${tx}px`);
-                particle.style.setProperty('--ty', `${ty}px`);
-                particlesContainer.appendChild(particle);
-                particles.push(particle);
-            }
-        }
-        particles.forEach(particle => {
-            particle.style.animation = 'particleDispersion 0.8s ease-out forwards';
-        });
-        setTimeout(() => {
-            particlesContainer.remove();
-        }, 1000);
+        createParticles(buttonRect);
         setTimeout(() => {
             confettiInstance.stop();
             setTimeout(() => {
